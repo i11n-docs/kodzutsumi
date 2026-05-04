@@ -98,3 +98,18 @@ main {
   color:  var(--menu-active-fg);
   box-shadow: 0 2px calc(var(--depth) * 3px) -2px var(--menu-active-bg);
 }
+
+.sidebar-menu summary > a {
+  display: grid;
+  grid-auto-flow: column;
+  align-content: flex-start;
+  align-items: center;
+  gap: calc(0.25rem * 2);
+  border-radius: var(--radius-field);
+  text-align: start;
+  transition-property: color, background-color, box-shadow;
+  transition-duration: 0.2s;
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  text-wrap: balance;
+  user-select: none;
+}

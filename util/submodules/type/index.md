@@ -1,8 +1,8 @@
 ---
 layout: layouts/index.vto
-title: options
+title: "type"
 icon: module
 author_id: ebntly
 ---
 
-The `@kz/type-utils/options`...
+The `@kz/util/capability`...

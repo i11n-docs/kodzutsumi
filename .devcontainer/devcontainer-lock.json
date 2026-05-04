@@ -1,0 +1,9 @@
+{
+  "features": {
+    "ghcr.io/devcontainers-extra/features/deno-asdf:2": {
+      "version": "2.0.16",
+      "resolved": "ghcr.io/devcontainers-extra/features/deno-asdf@sha256:55eba9e5d1a15158787fb34fda9a2308045dc6a0e38f41bd4e0ed4c967fa5aaa",
+      "integrity": "sha256:55eba9e5d1a15158787fb34fda9a2308045dc6a0e38f41bd4e0ed4c967fa5aaa"
+    }
+  }
+}
