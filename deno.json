@@ -3,14 +3,14 @@
     "@tailwindcss/typography": "npm:@tailwindcss/typography@^0.5.16",
     "daisyui/theme": "npm:daisyui@^5.0.51/theme/index.js",
     "daisyui": "npm:daisyui@^5.0.51",
-    "lume/": "https://deno.land/x/lume@v3.0.2/",
-    "lume/cms/": "https://cdn.jsdelivr.net/gh/lumeland/cms@0.11.5/",
+    "lume/": "https://deno.land/x/lume@v3.2.4/",
     "lume/jsx-runtime": "https://deno.land/x/ssx@v0.1.10/jsx-runtime.ts"
   },
   "lock": false,
   "tasks": {
     "lume": "echo \"import 'lume/cli.ts'\" | deno run -A -",
     "build": "deno task lume",
+    "dev": "deno task lume -w -s",
     "serve": "deno task lume -s"
   },
   "compilerOptions": {

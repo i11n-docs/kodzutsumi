@@ -7,7 +7,10 @@ layout: layouts/base.vto
     <div class="drawer-content py-0 px-2">
       <div>
         <main class="prose max-w-full">
-          <h1>{{title}}</h1>
+          <h1 class="flex items-center justify-between decicon">
+            <span>{{title}}</span>
+            {{ include "includes/header-icon.vto" { data: page.data} }}
+          </h1>
           <div>
             <span class="badge badge-info">{{ versions.start }}</span>
             <small>to</small>

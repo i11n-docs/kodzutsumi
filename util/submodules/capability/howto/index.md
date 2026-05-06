@@ -4,4 +4,4 @@ title: How-to...
 author_id: ebntly
 ---
 
-How to use $options
+How to use capabilities in the real world.

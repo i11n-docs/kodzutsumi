@@ -21,6 +21,7 @@ export default function (options: Partial<Options> = {}) {
       "_includes/includes/sidebar-icon.vto",
       "_includes/includes/relation.vto",
       "_includes/includes/relations.vto",
+      "_includes/includes/header-icon.vto",
       "uploads/favicon.png",
       "uploads/logo.png",
       "_data.yml",

@@ -48,7 +48,7 @@ type UseType<Type extends unknown = unknown> = {
 };
 ```
 An example of an capability open consumer.
-> Notice that is all of the capabilities, the default input type is the input type accepted by the capability.
+> Notice that in all of the capabilities, the default input type is the input type accepted by the capability.
 ```ts
 type LogicCapSet = UseCondition | UseStream | UseDefault;
 ```
@@ -108,3 +108,4 @@ These are not official terms, but they are used consistently across the types.
 ## Types
 `BaseCapConsumerSet`
 `BaseCapConsumerSetKeys`
+testt
