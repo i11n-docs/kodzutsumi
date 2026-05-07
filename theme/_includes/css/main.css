@@ -99,7 +99,7 @@ main {
   box-shadow: 0 2px calc(var(--depth) * 3px) -2px var(--menu-active-bg);
 }
 
-h1, h2, h3, h4, h5, h6 {
+.title {
   background: linear-gradient(
     to right,
     var(--color-primary) 0%,
@@ -109,22 +109,13 @@ h1, h2, h3, h4, h5, h6 {
   background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: 300;
+  font-size: 2.5em;
+}
+
+p, ul, ol, dl, h1, h2, h3, h4, h5, h6 {
   line-height: 1.44;
   margin-bottom: 0.5rem;  
   margin-top: 0.5rem;  
-}
-
-p, ul, ol, dl {
-  line-height: 1.44;
-  margin-bottom: 0.5rem;  
-  margin-top: 0.5rem;  
-}
-
-pre + p {
-  margin: 0;
-  font-size: 0.875rem;
-  border-bottom: 1px solid #2d2d2d;
-  padding: 0.5rem;
 }
 
 .sidebar-menu summary > a {
