@@ -12,6 +12,7 @@ import metas from "lume/plugins/metas.ts";
 import { Options as SitemapOptions, sitemap } from "lume/plugins/sitemap.ts";
 import { favicon, Options as FaviconOptions } from "lume/plugins/favicon.ts";
 import { merge } from "lume/core/utils/object.ts";
+import { alert } from "npm:@mdit/plugin-alert@0.22.2";
 import "npm:prismjs@1.29.0/components/prism-typescript.js";
 
 import "lume/types.ts";
@@ -101,5 +102,6 @@ export default function (userOptions?: Options) {
       }))
       .add("uploads")
       .add("style.css");
+    site.hooks.addMarkdownItPlugin(alert);
   };
 }
