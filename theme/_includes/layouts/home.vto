@@ -46,14 +46,14 @@ date: Git Last Modified
               </div>
             </div>
           </div>
-          <div class="divider mt-0"></div>
-          <div class="mx-2 px-2 max-w-full">
+          <div class="divider my-0"></div>
+          <div class="mx-2 px-2 max-w-full mb-1">
             <div class="breadcrumbs text-sm">
               <ul>
               {{ set crumbs = nav.breadcrumb(url)}}
               {{ for i, page of crumbs }}
                 <li>
-                  <a href="{{ page.data.url }}">{{ page.data.title }}</a>
+                  <a href="{{ page.data.url }}">{{ page.data.sidebar_title || page.data.title }}</a>
                 </li>
               {{ /for }}
               </ul>

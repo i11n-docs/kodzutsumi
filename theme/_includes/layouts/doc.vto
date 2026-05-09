@@ -32,9 +32,11 @@ layout: layouts/base.vto
         </main>
       </div>
     </div>
-    <div class="drawer-side h-auto">
+    <div class="drawer-side">
       <label for="my-drawer-4" aria-label="close sidebar" class="drawer-overlay"></label>
       <ul class="menu bg-base-200 text-base-content w-80 p-4">
+        <li class="menu-title">Table of Contents</li>
+        {{ include "includes/toc.vto"}}
         <li class="menu-title">Related content</li>
         {{ include "includes/relations.vto"}}
         {{ if date }}

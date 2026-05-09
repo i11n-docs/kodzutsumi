@@ -1,12 +1,13 @@
 {{ set max = capacity || 5 }}
 {{ set data = Array.isArray(relation) ? relation : relation ? [relation] : [] }}
-{{ set related = data.slice(0, max) }}
-{{ if related.length }}
+{{ set show = data.slice(0, max) }}
+{{ set hidden = data.slice(max) }}
+{{ if show.length }}
   <li>
     <details open>
       <summary>{{ label }}</summary>
       <ul>
-        {{ for i,item of related }}
+        {{ for i,item of show }}
           {{ if i < max }}
             <li>
               <a href="{{ item.url }}">{{ item.title }}</a>
@@ -17,3 +18,26 @@
     </details>
   </li>
 {{ /if }}
+{{ if hidden.length }}
+  <li>
+    <details>
+      <summary><a>More...</a></summary>
+      <ul class="ul-hidden">
+        {{ for item of show }}
+          <li>
+            {{ if item.children.length }}
+              <details open>
+                <summary><a href="#{{ item.slug }}">{{ item.text }}</a></summary>
+                <ul>
+                  {{ include "includes/toc-item.vto" { items: item.children || []} }}
+                </ul>
+              </details>
+            {{ else }}
+              <a href="#{{ item.slug }}">{{ item.text }}</a>
+            {{ /if }}
+          </li>
+        {{ /for }}
+      </ul>
+    </details>
+  </li>
+{{ /if}}

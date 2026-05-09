@@ -16,6 +16,7 @@ import { alert } from "npm:@mdit/plugin-alert@0.22.2";
 import "npm:prismjs@1.29.0/components/prism-typescript.js";
 
 import "lume/types.ts";
+import tocPlugin from "./toc.ts";
 
 export interface Options {
   sitemap?: Partial<SitemapOptions>;
@@ -38,6 +39,7 @@ export default function (userOptions?: Options) {
       .use(jsx())
       // .use(brotli())
       .use(metas())
+      .use(tocPlugin())
       .use(jsonLd())
       .use(basePath())
       .use(nav())
@@ -105,3 +107,4 @@ export default function (userOptions?: Options) {
     site.hooks.addMarkdownItPlugin(alert);
   };
 }
+

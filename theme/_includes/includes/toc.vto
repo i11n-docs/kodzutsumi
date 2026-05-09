@@ -1,0 +1,20 @@
+{{ if toc.length }}
+  <li>
+        <ul>
+      {{ for item of toc }}
+      <li>
+        {{ if item.children.length }}
+        <details open>
+          <summary><a href="#{{ item.slug }}">{{ item.text }}</a></summary>
+          <ul>
+            {{ include "includes/toc-item.vto" { items: item.children || [] } }}
+          </ul>
+          </details>
+        {{ else }}          
+          <a href="#{{ item.slug }}">{{ item.text }}</a>
+        {{ /if }}
+      </li>
+      {{ /for }}
+        </ul>
+  </li>
+{{ /if }}

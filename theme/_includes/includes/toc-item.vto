@@ -1,0 +1,41 @@
+{{ set max = capacity || 5 }}
+{{ set data = Array.isArray(relation) ? relation : relation ? [relation] : [] }}
+{{ set show = items.slice(0, max) }}
+{{ set hidden = items.slice(max) }}
+{{ for item of show }}
+  <li>
+    {{ if item.children.length }}
+      <details>
+        <summary><a href="#{{ item.slug }}">{{ item.text }}</a></summary>
+        <ul>
+          {{ include "includes/toc-item.vto" { items: item.children || []} }}
+        </ul>
+      </details>
+    {{ else }}
+      <a href="#{{ item.slug }}">{{ item.text }}</a>
+    {{ /if }}
+  </li>
+{{ /for }}
+{{ if hidden.length }}
+  <li>
+    <details>
+      <summary><a>More...</a></summary>
+      <ul class="ul-hidden">
+        {{ for item of show }}
+          <li>
+            {{ if item.children.length }}
+              <details open>
+                <summary><a href="#{{ item.slug }}">{{ item.text }}</a></summary>
+                <ul>
+                  {{ include "includes/toc-item.vto" { items: item.children || []} }}
+                </ul>
+              </details>
+            {{ else }}
+              <a href="#{{ item.slug }}">{{ item.text }}</a>
+            {{ /if }}
+          </li>
+        {{ /for }}
+      </ul>
+    </details>
+  </li>
+{{ /if}}
