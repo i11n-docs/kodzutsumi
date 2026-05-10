@@ -39,7 +39,6 @@ export default function (userOptions?: Options) {
       .use(jsx())
       // .use(brotli())
       .use(metas())
-      .use(tocPlugin())
       .use(jsonLd())
       .use(basePath())
       .use(nav())
@@ -54,6 +53,9 @@ export default function (userOptions?: Options) {
         indexing: {
           rootSelector: "main",
         },
+      }))
+      .use(tocPlugin({
+        level: 1,
       }))
       .use(relations({
         foreignKeys: {
