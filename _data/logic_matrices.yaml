@@ -1,0 +1,24 @@
+# expressions:
+#   - if
+#     - description: TEsTESTSETe
+#     - links:
+#       - url: fhjkdsha
+#         title: fdsjkh
+#         description: fhdjksahkfd
+#     - operands: [A]
+#       matrix:
+#         - [1, 1]
+#         - [0, 0]
+#         - [-1, -1]
+#   - and
+#     - operands: [A, B]
+#       matrix:
+#       - [1, 1, 1]
+#       - [1, 0, 0]
+#       - [1, -1, -1]
+#       - [0, 1, 0]
+#       - [0, 0, 0]
+#       - [0, -1, 0]
+#       - [-1, 1, -1]
+#       - [-1, 0, 0]
+#       - [-1, -1, -1]

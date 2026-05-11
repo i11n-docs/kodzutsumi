@@ -5,4 +5,4 @@ icon: module
 author_id: ebntly
 ---
 
-The `@kz/util/capability`...
+TODO

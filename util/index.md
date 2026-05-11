@@ -5,6 +5,4 @@ icon: package
 author_id: ebntly
 ---
 
-DOCUMENT
-
-- [`capability`](./capability)
+TODO
