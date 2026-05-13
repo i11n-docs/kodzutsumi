@@ -1,7 +1,18 @@
 
 {{ set current = parts.shift() }}
-{{ for page of pages }}
-  <li>
+{{ set mapped = pages.map((p) => {
+  p.data.order = p.data.order || 0;
+  return p;
+})}}
+{{ set sorted = pages.sort((a, b) => {
+  return a.data.order < b.data.order 
+    ? -1
+    : a.data.order > b.data.order
+      ? 1
+      : 0;
+})}}
+{{ for page of sorted }}
+  <li{{if !child }} class="top-level" {{/if}}>
     {{if !page.children }}
       <a href="{{ page.data.url }}"{{if page.data.url === url}} aria-current{{ /if }}>
         {{ include "includes/sidebar-icon.vto" { data: page.data} }}
@@ -15,7 +26,7 @@
           {{ page.data.sidebar_title || page.data.title }}
         </a></summary>
         <ul>
-          {{ include "includes/sidebar.vto" { pages: page.children, parts: parts } }}
+          {{ include "includes/sidebar.vto" { pages: page.children, parts: parts, child: true } }}
         </ul>
       </details>
     {{ /if }}

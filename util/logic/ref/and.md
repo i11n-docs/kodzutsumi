@@ -1,9 +1,11 @@
 ---
+type: reference
+author_id: ebntly
+
 layout: layouts/doc.vto
+
 title: And reference
 sidebar_title: And
-icon: reference
-author_id: ebntly
 versions:
   start: v0.0
 ---

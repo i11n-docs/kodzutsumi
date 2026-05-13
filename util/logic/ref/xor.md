@@ -1,9 +1,11 @@
 ---
+type: reference
+author_id: ebntly
+
 layout: layouts/doc.vto
+
 title: Xor reference
 sidebar_title: Xor
-icon: reference
-author_id: ebntly
 versions:
   start: v0.0
 ---

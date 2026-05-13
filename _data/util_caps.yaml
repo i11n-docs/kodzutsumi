@@ -1,0 +1,9 @@
+capabilities:
+  flag:
+    - name: UseAsync
+      summary: "Designed primarily for indicating support for concurrency in implementing types."
+      description: >
+        The `UseAsync` capability is designed primarily for indicating support for concurrency in implementing types.
+
+        Asynchronous behavior is for types that are not resolved, or will be.
+        Synchronous behavior is for types that are already resolved or are known at creation.

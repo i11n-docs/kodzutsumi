@@ -1,9 +1,11 @@
 ---
+type: reference
+author_id: ebntly
+
 layout: layouts/doc.vto
+
 title: If reference
 sidebar_title: If
-icon: reference
-author_id: ebntly
 versions:
   start: v0.0
 ---

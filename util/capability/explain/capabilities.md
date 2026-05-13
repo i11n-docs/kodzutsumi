@@ -1,13 +1,14 @@
 ---
-id: util--caps-1
-icon: explain
+id: cap-explain-001
 type: explanation
+author_id: ebntly
+
 layout: layouts/doc.vto
+
 title: Explain Capabilities
 sidebar_title: Capabilities
 versions:
   start: v0.0
-author_id: ebntly
 ---
 Capabilities are a collection of types indicating the capabilities of a type. They include a collection of capability settings that provide input to these capabilities for use in creating highly dynamic types.
 
