@@ -1,32 +1,32 @@
 
 {{ set current = parts.shift() }}
-{{ set mapped = pages.map((p) => {
+{{ set mapped = items.map((p) => {
   p.data.order = p.data.order || 0;
   return p;
 })}}
-{{ set sorted = pages.sort((a, b) => {
+{{ set sorted = mapped.sort((a, b) => {
   return a.data.order < b.data.order 
     ? -1
     : a.data.order > b.data.order
       ? 1
       : 0;
 })}}
-{{ for page of sorted }}
+{{ for item of sorted }}
   <li{{if !child }} class="top-level" {{/if}}>
-    {{if !page.children }}
-      <a href="{{ page.data.url }}"{{if page.data.url === url}} aria-current{{ /if }}>
-        {{ include "includes/sidebar-icon.vto" { data: page.data} }}
-        {{ page.data.sidebar_title || page.data.title }}
+    {{if !item.children }}
+      <a href="{{ item.data.url }}"{{if item.data.url === url}} aria-current{{ /if }}>
+        {{ include "includes/sidebar-icon.vto" { data: item.data} }}
+        {{ item.data.sidebar_title || item.data.title }}
       </a>
     {{ else }}
-      <details{{if current === page.data.basename }} open{{/if}}>
-        <summary{{if page.data.url === url}} aria-current{{ /if }}>
-          <a href="{{ page.data.url }}">
-          {{ include "includes/sidebar-icon.vto" { data: page.data} }}
-          {{ page.data.sidebar_title || page.data.title }}
+      <details{{if page.data.url.startsWith(item.data.url) || current === item.data.basename }} open{{/if}}>
+        <summary{{if item.data.url === url}} aria-current{{ /if }}>
+          <a href="{{ item.data.url }}">
+          {{ include "includes/sidebar-icon.vto" { data: item.data} }}
+          {{ item.data.sidebar_title || item.data.title }}
         </a></summary>
         <ul>
-          {{ include "includes/sidebar.vto" { pages: page.children, parts: parts, child: true } }}
+          {{ include "includes/sidebar.vto" { items: item.children, parts: parts, child: true} }}
         </ul>
       </details>
     {{ /if }}

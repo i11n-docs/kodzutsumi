@@ -78,7 +78,7 @@ date: Git Last Modified
                 </span>
               </a>
             </li>
-            {{ include "includes/sidebar.vto" { pages: nav.menu("/", "menu!=false").children, parts: url.split('/').slice(1) } }}
+            {{ include "includes/sidebar.vto" { items: nav.menu("/", "menu!=false").children, parts: url.split('/').slice(1) } }}
           </ul>
         </div>
       </div>
