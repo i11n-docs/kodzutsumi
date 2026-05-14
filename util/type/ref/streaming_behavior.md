@@ -35,6 +35,10 @@ The logic types support the following capabilities that influence its behavior:
 
 The behavior matrix outlines the outcomes based on different combinations of operand results and capability settings.
 
+### Understanding `AsUnsafe`
+
+The `AsUnsafe` setting of the `UseUnsafe` capability determines if a `boolean` comparison result is cast to `true`. By default, if the comparison between `Left` and `Right` results in `boolean`, it will be treated as `false` as only explicitly `true` results are treated as `true`. Setting `AsUnsafe` forces `boolean` results to be treated as `true`. The `AsUnsafe` setting effectively flips the treatment of a `boolean` result from `false` to `true`, making it more permissive in terms of type compatibility.
+
 | ID  | `UseStream`       | `UseDistributed` | `UseReversed`     | `UseInverted`     | `UseStrict`     | `UseUnsafe`    | Result |
 | --- | ----------------- | ---------------- | ----------------- | ----------------- | --------------- | -------------- | ------ |
 | 1   | **`AsPredicate`** | **`AsUnion`**    | ***`AsForward`*** | ***`AsInitial`*** | ***`AsLoose`*** | ***`AsSafe`*** |        |
@@ -69,11 +73,11 @@ The behavior matrix outlines the outcomes based on different combinations of ope
 | 30  | **`AsPredicate`** | `AsDistributed`  | `AsReversed`      | `AsInverted`      | ***`AsLoose`*** | `AsUnsafe`     |        |
 | 31  | **`AsPredicate`** | `AsDistributed`  | `AsReversed`      | `AsInverted`      | `AsStrict`      | ***`AsSafe`*** |        |
 | 32  | **`AsPredicate`** | `AsDistributed`  | `AsReversed`      | `AsInverted`      | `AsStrict`      | `AsUnsafe`     |        |
-| 33  | `AsFilter`        | **`AsUnion`**    | ***`AsForward`*** | ***`AsInitial`*** | ***`AsLoose`*** | ***`AsSafe`*** |        |
-| 34  | `AsFilter`        | **`AsUnion`**    | ***`AsForward`*** | ***`AsInitial`*** | ***`AsLoose`*** | `AsUnsafe`     |        |
-| 35  | `AsFilter`        | **`AsUnion`**    | ***`AsForward`*** | ***`AsInitial`*** | `AsStrict`      | ***`AsSafe`*** |        |
-| 36  | `AsFilter`        | **`AsUnion`**    | ***`AsForward`*** | ***`AsInitial`*** | `AsStrict`      | `AsUnsafe`     |        |
-| 37  | `AsFilter`        | **`AsUnion`**    | ***`AsForward`*** | `AsInverted`      | ***`AsLoose`*** | ***`AsSafe`*** |        |
+| 33  | `AsFilter`        | **`AsUnion`**    | ***`AsForward`*** | ***`AsInitial`*** | ***`AsLoose`*** | ***`AsSafe`*** | Returns `Left` if it extends `Right`, otherwise `never`        |
+| 34  | `AsFilter`        | **`AsUnion`**    | ***`AsForward`*** | ***`AsInitial`*** | ***`AsLoose`*** | `AsUnsafe`     | Returns `Left` if it extends `Right`, otherwise `never`        |
+| 35  | `AsFilter`        | **`AsUnion`**    | ***`AsForward`*** | ***`AsInitial`*** | `AsStrict`      | ***`AsSafe`*** | Returns `Left` if it strictly extends `Right`, otherwise `never`        |
+| 36  | `AsFilter`        | **`AsUnion`**    | ***`AsForward`*** | ***`AsInitial`*** | `AsStrict`      | `AsUnsafe`     | Returns `Left` if it strictly extends `Right`, otherwise `never`       |
+| 37  | `AsFilter`        | **`AsUnion`**    | ***`AsForward`*** | `AsInverted`      | ***`AsLoose`*** | ***`AsSafe`*** | Returns `Left` if it does not extend `Right`, otherwise `never`        |
 | 38  | `AsFilter`        | **`AsUnion`**    | ***`AsForward`*** | `AsInverted`      | ***`AsLoose`*** | `AsUnsafe`     |        |
 | 39  | `AsFilter`        | **`AsUnion`**    | ***`AsForward`*** | `AsInverted`      | `AsStrict`      | ***`AsSafe`*** |        |
 | 40  | `AsFilter`        | **`AsUnion`**    | ***`AsForward`*** | `AsInverted`      | `AsStrict`      | `AsUnsafe`     |        |
