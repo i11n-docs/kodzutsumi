@@ -3,8 +3,8 @@
     "@tailwindcss/typography": "npm:@tailwindcss/typography@^0.5.16",
     "daisyui/theme": "npm:daisyui@^5.0.51/theme/index.js",
     "daisyui": "npm:daisyui@^5.0.51",
-    "lume/": "https://deno.land/x/lume@v3.2.4/",
-    "lume/jsx-runtime": "https://deno.land/x/ssx@v0.1.10/jsx-runtime.ts"
+    "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@3.2.4/",
+    "lume/jsx-runtime": "https://cdn.jsdelivr.net/gh/oscarotero/ssx@0.1.14/jsx-runtime.ts"
   },
   "lock": false,
   "tasks": {
