@@ -22,14 +22,13 @@ The logic types support the following capabilities that influence its behavior:
 | `UseUnsafe`   | `AsSafe` (***implied***)    | Determines if a `boolean` comparison result is cast to `true`.                     |
 | `UseInverted` | `AsInitial` (***implied***) | Determines if the comparison result is inverted.                                   |
 | `UseReversed` | `AsForward` (***implied***) | Determines if the type comparison is reversed.                                     |
-| `UseUnified`  | `ASGHJK` (**default**)      | Determines if the comparison are distributed over a union or the union as a whole. |
+| `UseUnified`  | `AsDistributed` (**default**)      | Determines if the comparison are distributed over a union or the union as a whole. |
 | `UseStream`   | `AsPredicate` (**default**) | Determines if types are filtered out of a result or simply type checked.           |
 
 > [!NOTE]
 > The **implied** default means that if the capability is not explicitly set, it will be treated as the implied value.
 > For example, if `UseUnsafe` is not set, it will be treated as `AsSafe`.
 > The **default** means that if no capability is set, it will be treated as the default value and if not explicitly set, it will be treated as the implied value.
-
 
 ## Behavior
 
@@ -39,8 +38,8 @@ The behavior of conditional types is influenced by the capabilities set, which d
 
 The `UseUnified` and `UseReversed` capabilities influence how the types are compared, either as a whole or distributed over a union, and whether the comparison is reversed. For this example let's compare `string` and `string | number`:
 
-- With `UseUnified` as `ASGHJK` and `UseReversed` as `AsForward`, the comparison is "Does `string` extend `string | number`?", which results in `true`.
-- With `UseUnified` as `ASGHJK` and `UseReversed` as `AsReversed`, the comparison is "Does `string | number` extend `string`?", which results in `false`.
+- With `UseUnified` as `AsDistributed` and `UseReversed` as `AsForward`, the comparison is "Does `string` extend `string | number`?", which results in `true`.
+- With `UseUnified` as `AsDistributed` and `UseReversed` as `AsReversed`, the comparison is "Does `string | number` extend `string`?", which results in `false`.
 - With `UseUnified` as `AsUnified` and `UseReversed` as `AsForward`, the comparison is "Does `[string]` extend `[string | number]`?", which results in `false`.
 - With `UseUnified` as `AsUnified` and `UseReversed` as `AsReversed`, the comparison is "Does `[string | number]` extend `[string]`?", which results in `false`.
 
