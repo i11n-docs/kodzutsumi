@@ -17,91 +17,80 @@ Streaming behavior is influenced by two operands, `Left` and `Right`, which repr
 
 The logic types support the following capabilities that influence its behavior:
 
-| Capability       | Default                     | Description                                                                        |
-| ---------------- | --------------------------- | ---------------------------------------------------------------------------------- |
-| `UseUnsafe`      | `AsSafe` (***implied***)    | Determines if a `boolean` comparison result is cast to `true`.                     |
-| `UseInverted`    | `AsInitial` (***implied***) | Determines if the comparison result is inverted.                                   |
-| `UseStrict`      | `AsLoose` (***implied***)   | Determines if the types are strictly compared.                                     |
-| `UseReversed`    | `AsForward` (***implied***) | Determines if the type comparison is reversed.                                     |
-| `UseDistributed` | `AsUnion` (**default**)     | Determines if the comparison are distributed over a union or the union as a whole. |
-| `UseStream`      | `AsPredicate` (**default**) | Determines if types are filtered out of a result or simply type checked.           |
+| Capability    | Default                     | Description                                                                        |
+| ------------- | --------------------------- | ---------------------------------------------------------------------------------- |
+| `UseUnsafe`   | `AsSafe` (***implied***)    | Determines if a `boolean` comparison result is cast to `true`.                     |
+| `UseInverted` | `AsInitial` (***implied***) | Determines if the comparison result is inverted.                                   |
+| `UseReversed` | `AsForward` (***implied***) | Determines if the type comparison is reversed.                                     |
+| `UseUnified`  | `ASGHJK` (**default**)      | Determines if the comparison are distributed over a union or the union as a whole. |
+| `UseStream`   | `AsPredicate` (**default**) | Determines if types are filtered out of a result or simply type checked.           |
 
 > [!NOTE]
 > The **implied** default means that if the capability is not explicitly set, it will be treated as the implied value.
 > For example, if `UseUnsafe` is not set, it will be treated as `AsSafe`.
 > The **default** means that if no capability is set, it will be treated as the default value and if not explicitly set, it will be treated as the implied value.
 
+
+## Behavior
+
+The behavior of conditional types is influenced by the capabilities set, which determine how the types are compared, how the comparison result is treated, and how the conditional branches are determined.
+
+### Comparison
+
+The `UseUnified` and `UseReversed` capabilities influence how the types are compared, either as a whole or distributed over a union, and whether the comparison is reversed. For this example let's compare `string` and `string | number`:
+
+- With `UseUnified` as `ASGHJK` and `UseReversed` as `AsForward`, the comparison is "Does `string` extend `string | number`?", which results in `true`.
+- With `UseUnified` as `ASGHJK` and `UseReversed` as `AsReversed`, the comparison is "Does `string | number` extend `string`?", which results in `false`.
+- With `UseUnified` as `AsUnified` and `UseReversed` as `AsForward`, the comparison is "Does `[string]` extend `[string | number]`?", which results in `false`.
+- With `UseUnified` as `AsUnified` and `UseReversed` as `AsReversed`, the comparison is "Does `[string | number]` extend `[string]`?", which results in `false`.
+
+### Comparison result
+
+The `UseUnsafe` and `UseInverted` capabilities influence how the comparison result is treated, either as a `boolean` or as a type, and whether the result is inverted.
+
+There are cases where the comparison result is not explicitly `true` or `false`, resulting in a `boolean` result type. By default, the `boolean` result is treated as `false` (safe), as only cases where the comparison result is explicitly `true` are considered `true`. However, when `UseUnsafe` is set to `AsUnsafe`, the `boolean` result is treated as `true`, as it allows for the possibility of the comparison being `true` even if it cannot be determined at compile time. 
+
+When `UseInverted` is set to `AsInverted`, the comparison result is inverted, meaning that `true` becomes `false` and `false` becomes `true`. This can be useful in cases where you want to check for the opposite condition.
+
+### Streaming behavior
+
+The `UseStream` capability influences how the types are treated in the result, either as a filtered type or as a type check. When `UseStream` is set to `AsFilter`, the types that do not satisfy the condition are filtered out of the result, resulting in a narrower type. When `UseStream` is set to `AsPredicate`, the result is a type check, effectively returning `true` or `false` based on whether the types satisfy the condition (see [Conditional Behavior matrix: IDs 1 - 32](../conditional-behavior/#behavior-matrix)).
+
 ## Behavior matrix
 
 The behavior matrix outlines the outcomes based on different combinations of operand results and capability settings.
 
-### Understanding `AsUnsafe`
-
-The `AsUnsafe` setting of the `UseUnsafe` capability determines if a `boolean` comparison result is cast to `true`. By default, if the comparison between `Left` and `Right` results in `boolean`, it will be treated as `false` as only explicitly `true` results are treated as `true`. Setting `AsUnsafe` forces `boolean` results to be treated as `true`. The `AsUnsafe` setting effectively flips the treatment of a `boolean` result from `false` to `true`, making it more permissive in terms of type compatibility.
-
-| ID  | `UseStream`       | `UseDistributed` | `UseReversed`     | `UseInverted`     | `UseStrict`     | `UseUnsafe`    | Result |
-| --- | ----------------- | ---------------- | ----------------- | ----------------- | --------------- | -------------- | ------ |
-| 1   | **`AsPredicate`** | **`AsUnion`**    | ***`AsForward`*** | ***`AsInitial`*** | ***`AsLoose`*** | ***`AsSafe`*** |        |
-| 2   | **`AsPredicate`** | **`AsUnion`**    | ***`AsForward`*** | ***`AsInitial`*** | ***`AsLoose`*** | `AsUnsafe`     |        |
-| 3   | **`AsPredicate`** | **`AsUnion`**    | ***`AsForward`*** | ***`AsInitial`*** | `AsStrict`      | ***`AsSafe`*** |        |
-| 4   | **`AsPredicate`** | **`AsUnion`**    | ***`AsForward`*** | ***`AsInitial`*** | `AsStrict`      | `AsUnsafe`     |        |
-| 5   | **`AsPredicate`** | **`AsUnion`**    | ***`AsForward`*** | `AsInverted`      | ***`AsLoose`*** | ***`AsSafe`*** |        |
-| 6   | **`AsPredicate`** | **`AsUnion`**    | ***`AsForward`*** | `AsInverted`      | ***`AsLoose`*** | `AsUnsafe`     |        |
-| 7   | **`AsPredicate`** | **`AsUnion`**    | ***`AsForward`*** | `AsInverted`      | `AsStrict`      | ***`AsSafe`*** |        |
-| 8   | **`AsPredicate`** | **`AsUnion`**    | ***`AsForward`*** | `AsInverted`      | `AsStrict`      | `AsUnsafe`     |        |
-| 9   | **`AsPredicate`** | **`AsUnion`**    | `AsReversed`      | ***`AsInitial`*** | ***`AsLoose`*** | ***`AsSafe`*** |        |
-| 10  | **`AsPredicate`** | **`AsUnion`**    | `AsReversed`      | ***`AsInitial`*** | ***`AsLoose`*** | `AsUnsafe`     |        |
-| 11  | **`AsPredicate`** | **`AsUnion`**    | `AsReversed`      | ***`AsInitial`*** | `AsStrict`      | ***`AsSafe`*** |        |
-| 12  | **`AsPredicate`** | **`AsUnion`**    | `AsReversed`      | ***`AsInitial`*** | `AsStrict`      | `AsUnsafe`     |        |
-| 13  | **`AsPredicate`** | **`AsUnion`**    | `AsReversed`      | `AsInverted`      | ***`AsLoose`*** | ***`AsSafe`*** |        |
-| 14  | **`AsPredicate`** | **`AsUnion`**    | `AsReversed`      | `AsInverted`      | ***`AsLoose`*** | `AsUnsafe`     |        |
-| 15  | **`AsPredicate`** | **`AsUnion`**    | `AsReversed`      | `AsInverted`      | `AsStrict`      | ***`AsSafe`*** |        |
-| 16  | **`AsPredicate`** | **`AsUnion`**    | `AsReversed`      | `AsInverted`      | `AsStrict`      | `AsUnsafe`     |        |
-| 17  | **`AsPredicate`** | `AsDistributed`  | ***`AsForward`*** | ***`AsInitial`*** | ***`AsLoose`*** | ***`AsSafe`*** |        |
-| 18  | **`AsPredicate`** | `AsDistributed`  | ***`AsForward`*** | ***`AsInitial`*** | ***`AsLoose`*** | `AsUnsafe`     |        |
-| 19  | **`AsPredicate`** | `AsDistributed`  | ***`AsForward`*** | ***`AsInitial`*** | `AsStrict`      | ***`AsSafe`*** |        |
-| 20  | **`AsPredicate`** | `AsDistributed`  | ***`AsForward`*** | ***`AsInitial`*** | `AsStrict`      | `AsUnsafe`     |        |
-| 21  | **`AsPredicate`** | `AsDistributed`  | ***`AsForward`*** | `AsInverted`      | ***`AsLoose`*** | ***`AsSafe`*** |        |
-| 22  | **`AsPredicate`** | `AsDistributed`  | ***`AsForward`*** | `AsInverted`      | ***`AsLoose`*** | `AsUnsafe`     |        |
-| 23  | **`AsPredicate`** | `AsDistributed`  | ***`AsForward`*** | `AsInverted`      | `AsStrict`      | ***`AsSafe`*** |        |
-| 24  | **`AsPredicate`** | `AsDistributed`  | ***`AsForward`*** | `AsInverted`      | `AsStrict`      | `AsUnsafe`     |        |
-| 25  | **`AsPredicate`** | `AsDistributed`  | `AsReversed`      | ***`AsInitial`*** | ***`AsLoose`*** | ***`AsSafe`*** |        |
-| 26  | **`AsPredicate`** | `AsDistributed`  | `AsReversed`      | ***`AsInitial`*** | ***`AsLoose`*** | `AsUnsafe`     |        |
-| 27  | **`AsPredicate`** | `AsDistributed`  | `AsReversed`      | ***`AsInitial`*** | `AsStrict`      | ***`AsSafe`*** |        |
-| 28  | **`AsPredicate`** | `AsDistributed`  | `AsReversed`      | ***`AsInitial`*** | `AsStrict`      | `AsUnsafe`     |        |
-| 29  | **`AsPredicate`** | `AsDistributed`  | `AsReversed`      | `AsInverted`      | ***`AsLoose`*** | ***`AsSafe`*** |        |
-| 30  | **`AsPredicate`** | `AsDistributed`  | `AsReversed`      | `AsInverted`      | ***`AsLoose`*** | `AsUnsafe`     |        |
-| 31  | **`AsPredicate`** | `AsDistributed`  | `AsReversed`      | `AsInverted`      | `AsStrict`      | ***`AsSafe`*** |        |
-| 32  | **`AsPredicate`** | `AsDistributed`  | `AsReversed`      | `AsInverted`      | `AsStrict`      | `AsUnsafe`     |        |
-| 33  | `AsFilter`        | **`AsUnion`**    | ***`AsForward`*** | ***`AsInitial`*** | ***`AsLoose`*** | ***`AsSafe`*** | Returns `Left` if it extends `Right`, otherwise `never`        |
-| 34  | `AsFilter`        | **`AsUnion`**    | ***`AsForward`*** | ***`AsInitial`*** | ***`AsLoose`*** | `AsUnsafe`     | Returns `Left` if it extends `Right`, otherwise `never`        |
-| 35  | `AsFilter`        | **`AsUnion`**    | ***`AsForward`*** | ***`AsInitial`*** | `AsStrict`      | ***`AsSafe`*** | Returns `Left` if it strictly extends `Right`, otherwise `never`        |
-| 36  | `AsFilter`        | **`AsUnion`**    | ***`AsForward`*** | ***`AsInitial`*** | `AsStrict`      | `AsUnsafe`     | Returns `Left` if it strictly extends `Right`, otherwise `never`       |
-| 37  | `AsFilter`        | **`AsUnion`**    | ***`AsForward`*** | `AsInverted`      | ***`AsLoose`*** | ***`AsSafe`*** | Returns `Left` if it does not extend `Right`, otherwise `never`        |
-| 38  | `AsFilter`        | **`AsUnion`**    | ***`AsForward`*** | `AsInverted`      | ***`AsLoose`*** | `AsUnsafe`     |        |
-| 39  | `AsFilter`        | **`AsUnion`**    | ***`AsForward`*** | `AsInverted`      | `AsStrict`      | ***`AsSafe`*** |        |
-| 40  | `AsFilter`        | **`AsUnion`**    | ***`AsForward`*** | `AsInverted`      | `AsStrict`      | `AsUnsafe`     |        |
-| 41  | `AsFilter`        | **`AsUnion`**    | `AsReversed`      | ***`AsInitial`*** | ***`AsLoose`*** | ***`AsSafe`*** |        |
-| 42  | `AsFilter`        | **`AsUnion`**    | `AsReversed`      | ***`AsInitial`*** | ***`AsLoose`*** | `AsUnsafe`     |        |
-| 43  | `AsFilter`        | **`AsUnion`**    | `AsReversed`      | ***`AsInitial`*** | `AsStrict`      | ***`AsSafe`*** |        |
-| 44  | `AsFilter`        | **`AsUnion`**    | `AsReversed`      | ***`AsInitial`*** | `AsStrict`      | `AsUnsafe`     |        |
-| 45  | `AsFilter`        | **`AsUnion`**    | `AsReversed`      | `AsInverted`      | ***`AsLoose`*** | ***`AsSafe`*** |        |
-| 46  | `AsFilter`        | **`AsUnion`**    | `AsReversed`      | `AsInverted`      | ***`AsLoose`*** | `AsUnsafe`     |        |
-| 47  | `AsFilter`        | **`AsUnion`**    | `AsReversed`      | `AsInverted`      | `AsStrict`      | ***`AsSafe`*** |        |
-| 48  | `AsFilter`        | **`AsUnion`**    | `AsReversed`      | `AsInverted`      | `AsStrict`      | `AsUnsafe`     |        |
-| 49  | `AsFilter`        | `AsDistributed`  | ***`AsForward`*** | ***`AsInitial`*** | ***`AsLoose`*** | ***`AsSafe`*** |        |
-| 50  | `AsFilter`        | `AsDistributed`  | ***`AsForward`*** | ***`AsInitial`*** | ***`AsLoose`*** | `AsUnsafe`     |        |
-| 51  | `AsFilter`        | `AsDistributed`  | ***`AsForward`*** | ***`AsInitial`*** | `AsStrict`      | ***`AsSafe`*** |        |
-| 52  | `AsFilter`        | `AsDistributed`  | ***`AsForward`*** | ***`AsInitial`*** | `AsStrict`      | `AsUnsafe`     |        |
-| 53  | `AsFilter`        | `AsDistributed`  | ***`AsForward`*** | `AsInverted`      | ***`AsLoose`*** | ***`AsSafe`*** |        |
-| 54  | `AsFilter`        | `AsDistributed`  | ***`AsForward`*** | `AsInverted`      | ***`AsLoose`*** | `AsUnsafe`     |        |
-| 55  | `AsFilter`        | `AsDistributed`  | ***`AsForward`*** | `AsInverted`      | `AsStrict`      | ***`AsSafe`*** |        |
-| 56  | `AsFilter`        | `AsDistributed`  | ***`AsForward`*** | `AsInverted`      | `AsStrict`      | `AsUnsafe`     |        |
-| 57  | `AsFilter`        | `AsDistributed`  | `AsReversed`      | ***`AsInitial`*** | ***`AsLoose`*** | ***`AsSafe`*** |        |
-| 58  | `AsFilter`        | `AsDistributed`  | `AsReversed`      | ***`AsInitial`*** | ***`AsLoose`*** | `AsUnsafe`     |        |
-| 59  | `AsFilter`        | `AsDistributed`  | `AsReversed`      | ***`AsInitial`*** | `AsStrict`      | ***`AsSafe`*** |        |
-| 60  | `AsFilter`        | `AsDistributed`  | `AsReversed`      | ***`AsInitial`*** | `AsStrict`      | `AsUnsafe`     |        |
-| 61  | `AsFilter`        | `AsDistributed`  | `AsReversed`      | `AsInverted`      | ***`AsLoose`*** | ***`AsSafe`*** |        |
-| 62  | `AsFilter`        | `AsDistributed`  | `AsReversed`      | `AsInverted`      | ***`AsLoose`*** | `AsUnsafe`     |        |
-| 63  | `AsFilter`        | `AsDistributed`  | `AsReversed`      | `AsInverted`      | `AsStrict`      | ***`AsSafe`*** |        |
-| 64  | `AsFilter`        | `AsDistributed`  | `AsReversed`      | `AsInverted`      | `AsStrict`      | `AsUnsafe`     |        |
+| ID  | `UseStream`       | `UseUnified`        | `UseReversed`     | `UseInverted`     | `UseUnsafe`    | Result |
+| --- | ----------------- | ------------------- | ----------------- | ----------------- | -------------- | ------ |
+| 1   | **`AsPredicate`** | **`AsDistributed`** | ***`AsForward`*** | ***`AsInitial`*** | ***`AsSafe`*** |        |
+| 2   | **`AsPredicate`** | **`AsDistributed`** | ***`AsForward`*** | ***`AsInitial`*** | `AsUnsafe`     |        |
+| 3   | **`AsPredicate`** | **`AsDistributed`** | ***`AsForward`*** | `AsInverted`      | ***`AsSafe`*** |        |
+| 4   | **`AsPredicate`** | **`AsDistributed`** | ***`AsForward`*** | `AsInverted`      | `AsUnsafe`     |        |
+| 5   | **`AsPredicate`** | **`AsDistributed`** | `AsReversed`      | ***`AsInitial`*** | ***`AsSafe`*** |        |
+| 6   | **`AsPredicate`** | **`AsDistributed`** | `AsReversed`      | ***`AsInitial`*** | `AsUnsafe`     |        |
+| 7   | **`AsPredicate`** | **`AsDistributed`** | `AsReversed`      | `AsInverted`      | ***`AsSafe`*** |        |
+| 8   | **`AsPredicate`** | **`AsDistributed`** | `AsReversed`      | `AsInverted`      | `AsUnsafe`     |        |
+| 9   | **`AsPredicate`** | **`AsUnified`**     | ***`AsForward`*** | ***`AsInitial`*** | ***`AsSafe`*** |        |
+| 10  | **`AsPredicate`** | **`AsUnified`**     | ***`AsForward`*** | ***`AsInitial`*** | `AsUnsafe`     |        |
+| 11  | **`AsPredicate`** | **`AsUnified`**     | ***`AsForward`*** | `AsInverted`      | ***`AsSafe`*** |        |
+| 12  | **`AsPredicate`** | **`AsUnified`**     | ***`AsForward`*** | `AsInverted`      | `AsUnsafe`     |        |
+| 13  | **`AsPredicate`** | **`AsUnified`**     | `AsReversed`      | ***`AsInitial`*** | ***`AsSafe`*** |        |
+| 14  | **`AsPredicate`** | **`AsUnified`**     | `AsReversed`      | ***`AsInitial`*** | `AsUnsafe`     |        |
+| 15  | **`AsPredicate`** | **`AsUnified`**     | `AsReversed`      | `AsInverted`      | ***`AsSafe`*** |        |
+| 16  | **`AsPredicate`** | **`AsUnified`**     | `AsReversed`      | `AsInverted`      | `AsUnsafe`     |        |
+| 17  | `AsFilter`        | **`AsDistributed`** | ***`AsForward`*** | ***`AsInitial`*** | ***`AsSafe`*** |        |
+| 18  | `AsFilter`        | **`AsDistributed`** | ***`AsForward`*** | ***`AsInitial`*** | `AsUnsafe`     |        |
+| 19  | `AsFilter`        | **`AsDistributed`** | ***`AsForward`*** | `AsInverted`      | ***`AsSafe`*** |        |
+| 20  | `AsFilter`        | **`AsDistributed`** | ***`AsForward`*** | `AsInverted`      | `AsUnsafe`     |        |
+| 21  | `AsFilter`        | **`AsDistributed`** | `AsReversed`      | ***`AsInitial`*** | ***`AsSafe`*** |        |
+| 22  | `AsFilter`        | **`AsDistributed`** | `AsReversed`      | ***`AsInitial`*** | `AsUnsafe`     |        |
+| 23  | `AsFilter`        | **`AsDistributed`** | `AsReversed`      | `AsInverted`      | ***`AsSafe`*** |        |
+| 24  | `AsFilter`        | **`AsDistributed`** | `AsReversed`      | `AsInverted`      | `AsUnsafe`     |        |
+| 25  | `AsFilter`        | **`AsUnified`**     | ***`AsForward`*** | ***`AsInitial`*** | ***`AsSafe`*** |        |
+| 26  | `AsFilter`        | **`AsUnified`**     | ***`AsForward`*** | ***`AsInitial`*** | `AsUnsafe`     |        |
+| 27  | `AsFilter`        | **`AsUnified`**     | ***`AsForward`*** | `AsInverted`      | ***`AsSafe`*** |        |
+| 28  | `AsFilter`        | **`AsUnified`**     | ***`AsForward`*** | `AsInverted`      | `AsUnsafe`     |        |
+| 29  | `AsFilter`        | **`AsUnified`**     | `AsReversed`      | ***`AsInitial`*** | ***`AsSafe`*** |        |
+| 30  | `AsFilter`        | **`AsUnified`**     | `AsReversed`      | ***`AsInitial`*** | `AsUnsafe`     |        |
+| 31  | `AsFilter`        | **`AsUnified`**     | `AsReversed`      | `AsInverted`      | ***`AsSafe`*** |        |
+| 32  | `AsFilter`        | **`AsUnified`**     | `AsReversed`      | `AsInverted`      | `AsUnsafe`     |        |
